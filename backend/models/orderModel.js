@@ -9,6 +9,8 @@ const orderSchema = new mongoose.Schema({
     paymentMethod :{type : String, required: true},
     payment :{type : Boolean, required: true, default: false},
     date :{type : Number, required: true},
+    pytmOrderId:{type:String},
+    transactionId:{type: String}
 })
 
 const orderModel = mongoose.models.order || mongoose.model('order', orderSchema)
