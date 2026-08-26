@@ -100,11 +100,25 @@ const placeOrderStripe = async (req, res) => {
     }
 };
 
+// Verify Stripe
+const verifyStripe = async (req, res) =>{
+    
+    const { orderId , success , userId } = req.body
 
-// Placing orders using Googlepay Method
-const placeOrderGooglepay = async (req, res) => {
-
-
+    try {
+        if(success === "true"){
+            await orderModel.findByIdAndUpdate(orderId, {payment:true});
+            await userModel.findByIdAndUpdate(userId, {cartData:{}})
+            res.json({success:true});
+        }else{
+            await orderModel.findByIdAndDelete(orderId)
+            res.json({success:false})
+        }
+    } catch (error) {
+        console.log(error);
+        res.json({success:false, message:error.message})
+        
+    }
 }
 
 // All Orders data for Admin Panel
@@ -153,4 +167,4 @@ const upadteStatus = async (req, res) => {
     }
 }
 
-export { placeOrder, placeOrderStripe, placeOrderGooglepay, allOrders, userOrders, upadteStatus }
+export {verifyStripe, placeOrder, placeOrderStripe, allOrders, userOrders, upadteStatus }
